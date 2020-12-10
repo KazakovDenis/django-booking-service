@@ -1,0 +1,8 @@
+task.txt
+README.md
+scheme.png
+.gitignore
+*.sqlite
+venv
+__pycache__
+.idea

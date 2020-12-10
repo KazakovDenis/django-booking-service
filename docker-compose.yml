@@ -1,0 +1,20 @@
+version: "2"
+
+services:
+  booking:
+    build:
+      context: .
+      args:
+        - BOOKING_SECRET=${BOOKING_SECRET}
+    image: booking:1.0
+    container_name: booking
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python3 manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    networks:
+      - booking
+
+networks:
+  booking:
