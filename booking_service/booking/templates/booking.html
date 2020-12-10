@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-<center>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Записаться"/>
-    </form>
-</center>
+<h1>Записаться в поликлинику "Django"</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Записаться"/>
+</form>
 {% endblock %}

@@ -66,9 +66,9 @@ class Appointment(models.Model):
         unique_together = ('date', 'time', 'doctor')
         ordering = ['date', 'time', 'doctor']
 
-    def get_time(self):
+    @property
+    def str_time(self):
         return f'{self.time}:00'
 
     def __str__(self):
-        time = self.get_time()
-        return f'{self.doctor} @ {self.date} {time}'
+        return f'{self.doctor} @ {self.str_time} {self.date}'
