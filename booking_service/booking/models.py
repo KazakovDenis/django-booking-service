@@ -29,7 +29,9 @@ class Doctor(models.Model):
 
     def __str__(self):
         spec = Specialties(self.specialty).label
-        return f'[{spec}] {self.full_name}'
+        # todo: RecursionError
+        # return f'[{spec}] {self.full_name}'
+        return str(spec)
 
 
 class ConsultingHours(models.IntegerChoices):

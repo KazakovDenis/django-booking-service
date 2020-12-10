@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    Ждём Вас к {{ appointment.get_time() }} {{ appointment.date }} у доктора {{ appointment.doctor }}!
+</div>
+{% endblock %}
