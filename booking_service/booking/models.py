@@ -22,9 +22,14 @@ class Doctor(models.Model):
         verbose_name_plural = _('врачи')
         ordering = ['specialty', 'user']
 
-    @property
     def full_name(self):
         return '%s %s' % (self.user.first_name, self.user.last_name)
+    full_name.short_description = _('Имя и фамилия врача')
+    property(full_name)
+
+    def __str__(self):
+        spec = Specialties(self.specialty).label
+        return f'[{spec}] {self.full_name}'
 
 
 class ConsultingHours(models.IntegerChoices):
