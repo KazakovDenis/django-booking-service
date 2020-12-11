@@ -1,8 +1,9 @@
 from django.urls import path
 
-from .views import BookingView, SuccessView
+from . import views
 
 urlpatterns = [
-    path('', BookingView.as_view(), name='booking'),
-    path('success/', SuccessView.as_view(), name='success'),
+    path('', views.BookingView.as_view(), name='booking'),
+    path('success/', views.SuccessView.as_view(), name='success'),
+    path('schedule/<int:id>', views.get_doctor_appointments, name='schedule'),
 ]

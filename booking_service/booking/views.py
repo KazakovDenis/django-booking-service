@@ -1,6 +1,9 @@
-from django.http import HttpResponseRedirect, Http404
+from datetime import date
+
+from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_GET
 from django.views.generic import FormView, TemplateView
 
 from .forms import AppointmentForm
@@ -31,3 +34,19 @@ class SuccessView(TemplateView):
             raise Http404(_('Такой страницы не существует'))
         context['appointment'] = get_object_or_404(Appointment, pk=app_id)
         return context
+
+
+@require_GET
+def get_doctor_appointments(request, **kwargs):
+    """Получить приёмы врача"""
+    queryset = Appointment.objects.prefetch_related().filter(
+        doctor__id=kwargs.get('id'),
+        date__gte=date.today()
+    ).values('date', 'time')
+    result = {'result': list(queryset)}
+    json_params = {
+        'ensure_ascii': False,
+        'indent': 2,
+        'sort_keys': True
+    }
+    return JsonResponse(result, json_dumps_params=json_params)
