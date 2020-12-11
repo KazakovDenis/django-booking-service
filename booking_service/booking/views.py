@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.shortcuts import get_object_or_404
@@ -41,9 +41,15 @@ def get_doctor_appointments(request, **kwargs):
     """Получить приёмы врача"""
     queryset = Appointment.objects.prefetch_related().filter(
         doctor__id=kwargs.get('id'),
-        date__gte=date.today()
+        date__gte=datetime.today()
     ).values('date', 'time')
-    result = {'result': list(queryset)}
+
+    appointments = [
+        {'date': i['date'].strftime('%d.%m.%Y'), 'time': i['time']}
+        for i in queryset
+    ]
+
+    result = {'result': appointments}
     json_params = {
         'ensure_ascii': False,
         'indent': 2,
