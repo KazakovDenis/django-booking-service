@@ -21,7 +21,10 @@ class AppointmentForm(forms.ModelForm):
         widget=AdminDateWidget,
         validators=[date_validator],
         error_messages={
-            'bad_date': _('Дата записи не может быть раньше сегодня и позднее 31 декабря следующего года')
+            'bad_date': _(
+                'Дата записи не может быть раньше сегодня, выходным днём, '
+                'а также позднее 31 декабря следующего года'
+            )
         }
     )
 

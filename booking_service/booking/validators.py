@@ -8,11 +8,15 @@ from django.utils.translation import gettext_lazy as _
 def date_validator(value):
     """Проверка соответствия даты записи"""
     today = date.today()
+    code = 'bad_date'
 
+    if value.isoweekday() > 5:
+        raise ValidationError(_('Дата записи не может быть выходным днём'), code=code)
     if value < today:
-        raise ValidationError(_('Дата записи не может быть раньше текущего дня'), code='bad_date')
+        raise ValidationError(_('Дата записи не может быть раньше текущего дня'), code=code)
     if value.year == today.year + 2:
-        raise ValidationError(_('Мы не можем записать Вас в таком далёком будущем :)'), code='bad_date')
+        raise ValidationError(_('Дата записи не может быть назначена далее следующего года'), code=code)
+
     return value
 
 
