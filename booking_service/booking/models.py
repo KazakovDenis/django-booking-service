@@ -4,6 +4,8 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from .validators import date_validator
+
 
 class Specialties(models.TextChoices):
     """Специальности врачей"""
@@ -51,7 +53,7 @@ class Appointment(models.Model):
     """Приём у врача"""
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     visitor = models.CharField(_('пациент'), max_length=255)
-    date = models.DateField(_('дата приёма'))
+    date = models.DateField(_('дата приёма'), validators=[date_validator])
     time = models.IntegerField(_('время приёма'), choices=ConsultingHours.choices)
     doctor = models.ForeignKey(
         Doctor,

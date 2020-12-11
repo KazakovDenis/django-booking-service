@@ -3,26 +3,31 @@ from django.contrib.admin.widgets import AdminDateWidget
 from django.utils.translation import gettext_lazy as _
 
 from .models import Appointment
+from .validators import date_validator, name_validator
 
 
 class AppointmentForm(forms.ModelForm):
     """Форма записи на приём"""
+    visitor = forms.CharField(
+        label=_('Ваши имя и фамилия'),
+        validators=[name_validator],
+        error_messages={
+            'bad_fio': _('Имя и фамилия указаны некорректно'),
+            'max_length': _('Имя и фамилия слишком длинные'),
+        }
+    )
+    date = forms.DateField(
+        label=_('Дата приёма'),
+        widget=AdminDateWidget,
+        validators=[date_validator],
+        error_messages={
+            'bad_date': _('Дата записи не может быть раньше сегодня и позднее 31 декабря следующего года')
+        }
+    )
+
     class Meta:
         model = Appointment
         fields = ('visitor', 'doctor', 'date', 'time')
-        labels = {
-            'visitor': _('Ваши имя и фамилия'),
-            'date': _('Дата приёма'),
-        }
-        widgets = {
-            'date': AdminDateWidget,
-        }
-        error_messages = {
-            'visitor': {
-                'min_length': _('Имя и фамилия слишком короткие'),
-                'max_length': _('Имя и фамилия слишком длинные'),
-            },
-        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

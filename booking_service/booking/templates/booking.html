@@ -12,6 +12,11 @@
                     <div>{{ field }}</div>
                 </div>
             {% endfor %}
+            {% if form.errors %}
+                {% for error in form.errors.values %}
+                    {{ error }}
+                {% endfor %}
+            {% endif %}
             <input type="submit" value="Записаться"/>
         </form>
     </div>
