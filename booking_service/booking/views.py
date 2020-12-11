@@ -14,7 +14,7 @@ class BookingView(FormView):
     success_url = '/success/'
 
     def form_valid(self, form):
-        """Сохранить Приём у варча и направить на страницу успешной записи"""
+        """Сохранить Приём у врача и направить на страницу успешной записи"""
         instance = form.save()
         url = '%s?id=%s' % (self.get_success_url(), instance.id)
         return HttpResponseRedirect(url)

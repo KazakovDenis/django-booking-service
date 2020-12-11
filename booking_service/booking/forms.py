@@ -1,20 +1,31 @@
-from datetime import date
-
 from django import forms
+from django.contrib.admin.widgets import AdminDateWidget
 from django.utils.translation import gettext_lazy as _
 
 from .models import Appointment
 
 
-_CURRENT_YEAR = date.today().year
-_YEARS = range(_CURRENT_YEAR, _CURRENT_YEAR + 2)
-
-
 class AppointmentForm(forms.ModelForm):
     """Форма записи на приём"""
-    visitor = forms.CharField(label=_('Ваши имя и фамилия'), max_length=255)
-    date = forms.DateField(widget=forms.SelectDateWidget(years=_YEARS))
-
     class Meta:
         model = Appointment
-        fields = '__all__'
+        fields = ('visitor', 'doctor', 'date', 'time')
+        labels = {
+            'visitor': _('Ваши имя и фамилия'),
+            'date': _('Дата приёма'),
+        }
+        widgets = {
+            'date': AdminDateWidget,
+        }
+        error_messages = {
+            'visitor': {
+                'min_length': _('Имя и фамилия слишком короткие'),
+                'max_length': _('Имя и фамилия слишком длинные'),
+            },
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        bootstrap_cls = {'class': 'form-control'}
+        for field in ('visitor', 'doctor', 'time'):
+            self.fields[field].widget.attrs.update(bootstrap_cls)
