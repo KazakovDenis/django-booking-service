@@ -27,13 +27,14 @@ class Doctor(models.Model):
     def full_name(self):
         return '%s %s' % (self.user.first_name, self.user.last_name)
     full_name.short_description = _('Имя и фамилия врача')
-    property(full_name)
+    full_name = property(full_name)
+
+    @property
+    def spec_label(self):
+        return str(Specialties(self.specialty).label)
 
     def __str__(self):
-        spec = Specialties(self.specialty).label
-        # todo: RecursionError
-        # return f'[{spec}] {self.full_name}'
-        return str(spec)
+        return self.spec_label + ' ' + self.full_name
 
 
 class ConsultingHours(models.IntegerChoices):

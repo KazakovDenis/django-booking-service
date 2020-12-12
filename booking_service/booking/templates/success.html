@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Ждём Вас к {{ appointment.str_time }} {{ appointment.date }} у доктора {{ appointment.doctor }}!</h1>
+<div class="col text-center" style="font-size: 2.5em">
+    <div>
+        Ждём Вас к {{ appointment.str_time }} {{ appointment.date }} у нашего доктора:
+    </div>
+    <div>{{ appointment.doctor.spec_label }} {{ appointment.doctor.full_name }}</div>
+    <div><a href="{% url 'booking' %}">На главную</a></div>
+</div>
 {% endblock %}
