@@ -28,15 +28,15 @@ class SmokeTest(TestCase):
     def test_service_running(self):
         """Проверка основных endpoint"""
         urls = (
-            ('/', 200),
-            ('/admin/', 302),
-            ('/admin/login/', 200),
-            ('/admin/logout/', 302),
-            (f'/schedule/{self.doctor.id}', 200),
-            (f'/success/?id={self.apt.id}', 200),
+            ('/', 200, None),
+            ('/admin/', 302, None),
+            ('/admin/login/', 200, None),
+            ('/admin/logout/', 302, None),
+            (f'/schedule/{self.doctor.id}', 200, None),
+            ('/success/', 200, {'id': self.apt.id}),
         )
 
-        for url, status in urls:
+        for url, status, params in urls:
             with self.subTest(url):
-                response = self.client.get(url)
+                response = self.client.get(url, params)
                 self.assertEqual(response.status_code, status)
