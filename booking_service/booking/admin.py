@@ -11,10 +11,13 @@ class AppointmentInline(admin.TabularInline):
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'specialty')
-    list_filter = ('specialty', 'user')
-    search_fields = ('specialty', 'user')
-    fields = ('user', 'specialty')
+    list_filter = ('specialty',)
+    search_fields = ('specialty', 'user__first_name', 'user__last_name')
+    ordering = ('specialty', 'user__last_name')
+
+    fields = ('specialty', 'user', 'full_name')
+    readonly_fields = ('user', 'full_name')
 
     inlines = [
-        AppointmentInline,
+        AppointmentInline
     ]

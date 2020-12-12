@@ -25,8 +25,8 @@ class Doctor(models.Model):
         ordering = ['specialty', 'user']
 
     def full_name(self):
-        return '%s %s' % (self.user.first_name, self.user.last_name)
-    full_name.short_description = _('Имя и фамилия врача')
+        return f'{self.user.last_name} {self.user.first_name}'
+    full_name.short_description = _('Фамилия и имя врача')
     full_name = property(full_name)
 
     @property
@@ -34,7 +34,7 @@ class Doctor(models.Model):
         return str(Specialties(self.specialty).label)
 
     def __str__(self):
-        return self.spec_label + ' ' + self.full_name
+        return f'{self.spec_label} {self.full_name}'
 
 
 class ConsultingHours(models.IntegerChoices):
@@ -65,7 +65,7 @@ class Appointment(models.Model):
 
     class Meta:
         verbose_name = _('приём у врача')
-        verbose_name_plural = _('приёмы у врачей')
+        verbose_name_plural = _('приёмы у врача')
         unique_together = ('date', 'time', 'doctor')
         ordering = ['date', 'time', 'doctor']
 
