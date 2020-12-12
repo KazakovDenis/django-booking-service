@@ -6,6 +6,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const hideClass = 'd-none';
     const doctorSelect = document.querySelector('select[name="doctor"]');
     const dateInput = document.querySelector('input[name="date"]');
+    const dateLinks = document.querySelectorAll('#calendarbox0 a:not([class])');
+    const todayLink = document.querySelector('.datetimeshortcuts a');
     const timeSelect = document.querySelector('select[name="time"]');
 
     async function send_request(method, url, data=null, headers={}) {
@@ -43,6 +45,14 @@ window.addEventListener('DOMContentLoaded', () => {
         option.classList.add(hideClass);
     }
 
+    function hideAllTimeOptions() {
+        // Скрыть опцию у выпадающего списка выбора времени
+        let options = timeSelect.querySelectorAll('option');
+        options.forEach(opt => {
+            opt.classList.add(hideClass);
+        });
+    }
+
     function setTimeOptions(date) {
         // Установить опции выбора времени в соответствии с датой
 
@@ -70,16 +80,62 @@ window.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    function getDate(raw_date) {
+        // Получить объект даты из формы
+        let reversed = raw_date.split('.').reverse();
+        let formatted = reversed.join('-');
+        let date = new Date(formatted);
+        return date;
+    }
+
+    function validateDate(form_date) {
+        // Проверить соответствие даты требованиям
+        if (!form_date) { return false; }
+        let date = getDate(form_date);
+
+        // Проверяем, что дата введена в правильном формате
+        let pattern = /[0-9]{2}\.[0-9]{2}\.[0-9]{4}/;
+        if (!form_date.match(pattern)) {
+            alert('Дата должна быть указана в формате: 12.04.1961');
+            return false;
+        }
+
+        // Проверяем, что дата не ранее сегодня
+        let today = new Date();
+        today.setHours(0, 0, 0 ,0);
+        let last_available = new Date(today.getFullYear() + 1, 11, 31);
+
+        if (date < today) {
+            alert('Дата записи не может быть ранее сегодня');
+            return false;
+        } else if (date > last_available) {
+            alert('Дата записи не может быть позднее 31 декабря следующего года');
+            return false;
+        }
+
+        // Проверяем, что дата - не выходной день
+        let weekday = date.getDay();
+        if (weekday > 5) {
+            alert('К сожалению, приём не ведётся по выходным дням');
+            return false;
+        };
+
+        return form_date;
+    }
+
     function setAvailableHours(event) {
         // Установить доступные для выбора часы приёма
-        let date = dateInput.value;
-        let pattern = /[0-9]{2}\.[0-9]{2}\.[0-9]{4}/;
+        let valid_date = validateDate(dateInput.value);
 
-        if (!date && !date.match(pattern)) {
-            alert('Дата должна быть указана в формате: 12.04.1961');
+        if (!valid_date) {
+            dateInput.style.background = 'pink';
+            hideAllTimeOptions();
         } else {
-            setTimeOptions(date);
+            setTimeOptions(valid_date);
         };
     };
-    dateInput.addEventListener('change', setAvailableHours);
+    dateInput.addEventListener('focusin', (event) => {
+        event.target.style.background = '';
+    });
+    dateInput.addEventListener('focusout', setAvailableHours);
 });
