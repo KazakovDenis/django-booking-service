@@ -14,13 +14,14 @@ class SmokeTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        date, time = get_next_date_time()
         cls.user = User.objects.create_superuser(email=EMAIL, **CREDENTIALS)
         cls.doctor = Doctor.objects.create(user=cls.user, specialty=SPECIALTY)
         cls.apt = Appointment.objects.create(
             doctor=cls.doctor,
             visitor=random_str(),
-            date=TODAY,
-            time=START_TIME,
+            date=date,
+            time=time,
         )
 
     def setUp(self):
