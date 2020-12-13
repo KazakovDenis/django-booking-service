@@ -1,4 +1,6 @@
 from datetime import date as _date
+from random import sample as _sample
+from string import ascii_letters as _letters
 
 from django.urls import reverse
 
@@ -10,7 +12,7 @@ CREDENTIALS = {'username': USERNAME, 'password': PASSWORD}
 SPECIALTY = 'therapist'
 
 TODAY = _date.today()
-TIME = 9
+START_TIME = 9
 
 
 class URL:
@@ -25,3 +27,7 @@ class URL:
         if doctor_id:
             kwargs['id'] = doctor_id
         return reverse('schedule', kwargs=kwargs)
+
+
+def random_str(length: int = 10) -> str:
+    return ''.join(_sample(_letters, length))
