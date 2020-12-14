@@ -29,7 +29,7 @@ class SmokeTest(TestCase):
 
     def test_service_running(self):
         """Проверка основных endpoint"""
-        urls = (
+        test_data = (
             (URL.BOOKING, 200, None),
             (URL.ADMIN, 302, None),
             (URL.LOGIN, 200, None),
@@ -38,7 +38,7 @@ class SmokeTest(TestCase):
             (URL.schedule(self.doctor.id), 200, None),
         )
 
-        for url, status, params in urls:
+        for url, status, params in test_data:
             with self.subTest(url):
                 response = self.client.get(url, params)
                 self.assertEqual(response.status_code, status)

@@ -94,7 +94,7 @@ class BookingTest(TestCase):
         }
 
         saturday = get_nearest_day_off()
-        sunday = get_nearest_day_off() + timedelta(days=1)
+        sunday = saturday + timedelta(days=1)
 
         test_data = [
             ('In the past', date_to_str(date(2020, 12, 1))),

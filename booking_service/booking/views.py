@@ -37,7 +37,7 @@ class SuccessView(TemplateView):
 
 
 @require_GET
-def get_doctor_appointments(request, **kwargs):
+def doctor_appointments_view(request, **kwargs):
     """Получить приёмы врача"""
     queryset = Appointment.objects.prefetch_related().filter(
         doctor__id=kwargs.get('id'),
@@ -45,7 +45,7 @@ def get_doctor_appointments(request, **kwargs):
     ).values('date', 'time')
 
     appointments = [
-        {'date': i['date'].strftime('%d.%m.%Y'), 'time': i['time']}
+        {'date': i.pop('date').strftime('%d.%m.%Y'), **i}
         for i in queryset
     ]
 
