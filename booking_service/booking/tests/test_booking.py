@@ -6,6 +6,7 @@ from django.test import TestCase
 
 from booking.forms import AppointmentForm
 from booking.models import Appointment, Doctor
+import utils
 from .common import *
 
 
@@ -26,11 +27,11 @@ class BookingTest(TestCase):
 
     def test_create_appointment_positive(self):
         """Проверка возможности записи на приём"""
-        date, time = get_next_date_time()
+        visit_date, time = utils.get_next_date_time()
         form_data = {
-            'visitor': random_str(),
+            'visitor': utils.random_str(),
             'doctor': self.doctor.id,
-            'date': date,
+            'date': visit_date,
             'time': time,
         }
         form = AppointmentForm(data=form_data)
@@ -38,8 +39,8 @@ class BookingTest(TestCase):
 
     def test_appointment_exists(self):
         """Проверка валидации при записи на уже зарезервированное время"""
-        visit_date, time = get_next_date_time()
-        visitor = random_str()
+        visit_date, time = utils.get_next_date_time()
+        visitor = utils.random_str()
 
         Appointment.objects.create(
             doctor=self.doctor,
@@ -62,7 +63,7 @@ class BookingTest(TestCase):
 
     def test_bad_name(self):
         """Проверка валидации имени"""
-        visit_date, time = get_next_date_time('%d.%m.%Y')
+        visit_date, time = utils.get_next_date_time('%d.%m.%Y')
         form_data = {
             'doctor': self.doctor.id,
             'date': visit_date,
@@ -89,11 +90,11 @@ class BookingTest(TestCase):
         """Проверка валидации даты"""
         form_data = {
             'doctor': self.doctor.id,
-            'visitor': random_str(),
-            'time': START_TIME,
+            'visitor': utils.random_str(),
+            'time': utils.START_TIME,
         }
 
-        saturday = get_nearest_day_off()
+        saturday = utils.get_nearest_day_off()
         sunday = saturday + timedelta(days=1)
 
         test_data = [

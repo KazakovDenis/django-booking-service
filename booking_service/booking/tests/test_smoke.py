@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.utils.translation import gettext_lazy as _
 
 from booking.models import Appointment, Doctor
+from utils import get_next_date_time, random_str
 from .common import *
 
 

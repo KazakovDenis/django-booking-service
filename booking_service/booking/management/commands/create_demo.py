@@ -5,8 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 
 from booking import models
-# todo: вынести в utils
-from booking.tests.common import get_next_date_time, random_str
+from utils import get_next_date_time, random_str
 
 
 NAMES = (
@@ -31,7 +30,7 @@ class Command(BaseCommand):
 
         for number, spec in enumerate(models.Specialties, start=1):
             user = user_model.objects.create_user(
-                username=random_str(),
+                username='demo_' + random_str(),
                 first_name=random.choice(NAMES),
                 last_name=random.choice(SURNAMES),
                 is_staff=True,
