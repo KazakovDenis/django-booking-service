@@ -14,7 +14,7 @@ def date_validator(value):
         raise ValidationError(_('Дата записи не может быть выходным днём'), code=code)
     if value < today:
         raise ValidationError(_('Дата записи не может быть раньше текущего дня'), code=code)
-    if value.year == today.year + 2:
+    if value.year > today.year + 1:
         raise ValidationError(_('Дата записи не может быть назначена далее следующего года'), code=code)
 
     return value
