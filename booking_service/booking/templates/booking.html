@@ -14,6 +14,7 @@
                 <div class="form-group">
                     <label for="{{ field.name }}">{{ field.label }}</label>
                     <div>{{ field }}</div>
+                    <div class="d-none text-danger message my-1"></div>
                 </div>
             {% endfor %}
             {% if form.errors %}

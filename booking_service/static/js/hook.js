@@ -18,6 +18,20 @@ function showElement(elem) {
     elem.classList.remove(hideClass);
 }
 
+function showMessage(elem, msg) {
+    // Показать сообщение об ошибке в валидации элемента
+    let msgDiv = elem.parentElement.parentElement.querySelector('.message');
+    showElement(msgDiv);
+    msgDiv.innerHTML = msg;
+}
+
+function hideMessage(elem) {
+    // Скрыть сообщение об ошибке в валидации элемента
+    let msgDiv = elem.parentElement.parentElement.querySelector('.message');
+    hideElement(msgDiv);
+    msgDiv.innerHTML = '';
+}
+
 async function send_request(method, url, data=null, headers={}) {
     const resp = await fetch(url, {
         method: method,
@@ -50,13 +64,15 @@ doctorSelect.addEventListener('change', getDoctorSchedule);
 function hideTimeOption(time) {
     // Скрыть опцию у выпадающего списка выбора времени
     let option = timeSelect.querySelector(`[value="${time}"]`);
-    hideElement(option);
+    option.disabled = true;
 }
 
 function hideAllTimeOptions() {
     // Скрыть все опции выбора времени
     let options = timeSelect.querySelectorAll('option');
-    options.forEach(opt => hideElement(opt));
+    options.forEach(opt => {
+        opt.disabled = true;
+    });
 }
 
 function setTimeOptions(date) {
@@ -64,15 +80,13 @@ function setTimeOptions(date) {
 
     let options = timeSelect.querySelectorAll(`option`);
     options.forEach(opt => {
-        opt.classList.remove(hideClass);
+        opt.disabled = false;
     });
 
     // получаем все приёмы за указанную дату
     let reservedHours;
 
-    if (!appointments) {
-        console.error('Не смогли получить информацию о приёмах у данного врача');
-    } else {
+    if (appointments) {
         reservedHours = appointments.filter(item => {
             return item.date == date
         }).map(item => {
@@ -101,7 +115,7 @@ function validateDate(formDate) {
     // Проверяем, что дата введена в правильном формате
     let pattern = /[0-9]{2}\.[0-9]{2}\.[0-9]{4}/;
     if (!formDate.match(pattern)) {
-        alert('Дата должна быть указана в формате: 12.04.1961');
+        showMessage(dateInput, 'Дата должна быть указана в формате: 12.04.1961');
         return false;
     }
 
@@ -113,17 +127,17 @@ function validateDate(formDate) {
     let lastAvailable = new Date(today.getFullYear() + 1, 11, 31);
 
     if (date < today) {
-        alert('Дата записи не может быть ранее сегодня');
+        showMessage(dateInput, 'Дата записи не может быть ранее сегодня');
         return false;
     } else if (date > lastAvailable) {
-        alert('Дата записи не может быть позднее 31 декабря следующего года');
+        showMessage(dateInput, 'Дата записи не может быть позднее 31 декабря следующего года');
         return false;
     }
 
     // Проверяем, что дата - не выходной день
     let weekday = date.getDay();
     if (weekday == 0 || weekday == 6) {
-        alert('К сожалению, приём не ведётся по выходным дням');
+        showMessage(dateInput, 'К сожалению, приём не ведётся по выходным дням');
         return false;
     };
 
@@ -143,9 +157,11 @@ function setAvailableHours(event) {
 };
 doctorSelect.addEventListener('focusin', (event) => {
     event.target.style.background = '';
+    hideMessage(doctorSelect);
 });
 dateInput.addEventListener('focusin', (event) => {
     event.target.style.background = '';
+    hideMessage(dateInput);
 });
 dateInput.addEventListener('focusout', setAvailableHours);
 
@@ -154,7 +170,7 @@ function validateDoctor() {
     if (!doctorSelect.value) {
         doctorSelect.style.background = 'pink';
         hideAllTimeOptions();
-        alert('Укажите врача');
+        showMessage(doctorSelect, 'Укажите врача');
     };
 }
 timeSelect.addEventListener('focusin', validateDoctor);
