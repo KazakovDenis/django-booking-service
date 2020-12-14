@@ -54,7 +54,7 @@ function hideTimeOption(time) {
 }
 
 function hideAllTimeOptions() {
-    // Скрыть опцию у выпадающего списка выбора времени
+    // Скрыть все опции выбора времени
     let options = timeSelect.querySelectorAll('option');
     options.forEach(opt => hideElement(opt));
 }
@@ -86,35 +86,36 @@ function setTimeOptions(date) {
     };
 }
 
-function getDate(raw_date) {
+function getDate(rawDate) {
     // Получить объект даты из формы
-    let reversed = raw_date.split('.').reverse();
+    let reversed = rawDate.split('.').reverse();
     let formatted = reversed.join('-');
     let date = new Date(formatted);
     return date;
 }
 
-function validateDate(form_date) {
+function validateDate(formDate) {
     // Проверить соответствие даты требованиям
-    if (!form_date) { return false; }
-    let date = getDate(form_date);
+    if (!formDate) { return false; }
 
     // Проверяем, что дата введена в правильном формате
     let pattern = /[0-9]{2}\.[0-9]{2}\.[0-9]{4}/;
-    if (!form_date.match(pattern)) {
+    if (!formDate.match(pattern)) {
         alert('Дата должна быть указана в формате: 12.04.1961');
         return false;
     }
 
+    let date = getDate(formDate);
+
     // Проверяем, что дата не ранее сегодня
     let today = new Date();
     today.setHours(0, 0, 0 ,0);
-    let last_available = new Date(today.getFullYear() + 1, 11, 31);
+    let lastAvailable = new Date(today.getFullYear() + 1, 11, 31);
 
     if (date < today) {
         alert('Дата записи не может быть ранее сегодня');
         return false;
-    } else if (date > last_available) {
+    } else if (date > lastAvailable) {
         alert('Дата записи не может быть позднее 31 декабря следующего года');
         return false;
     }
@@ -126,18 +127,18 @@ function validateDate(form_date) {
         return false;
     };
 
-    return form_date;
+    return formDate;
 }
 
 function setAvailableHours(event) {
     // Установить доступные для выбора часы приёма
-    let valid_date = validateDate(dateInput.value);
+    let validDate = validateDate(dateInput.value);
 
-    if (!valid_date) {
+    if (!validDate) {
         dateInput.style.background = 'pink';
         hideAllTimeOptions();
     } else {
-        setTimeOptions(valid_date);
+        setTimeOptions(validDate);
     };
 };
 doctorSelect.addEventListener('focusin', (event) => {
@@ -156,7 +157,8 @@ function validateDoctor() {
         alert('Укажите врача');
     };
 }
-timeSelect.addEventListener('focusin', validateDoctor, setAvailableHours);
+timeSelect.addEventListener('focusin', validateDoctor);
+timeSelect.addEventListener('focusin', setAvailableHours);
 
 
 // Работа с календарём
@@ -170,7 +172,6 @@ function lockCalendar() {
         calendarBack = document.querySelector('a.calendarnav-previous');
         calendarNext = document.querySelector('a.calendarnav-next');
 
-        // TODO: показывает на 1 месяц больше до и после
         function hideCalendarArrow(event) {
             // Скрыть стрелки календаря, для указанных временных рамок
             let today = new Date();
@@ -179,11 +180,11 @@ function lockCalendar() {
             let displayedMonth = new Date(calendar.currentYear, calendar.currentMonth - 1);
             let displayedYear = displayedMonth.getFullYear();
 
-            if (currentMonth > displayedMonth) {
+            if (currentMonth >= displayedMonth) {
             // Скрываем кнопку "назад" в календаре, если месяц ранее текущего
                 hideElement(calendarBack);
                 showElement(calendarNext);
-            } else if (displayedYear > availableYear) {
+            } else if (displayedYear >= availableYear && calendar.currentMonth == 12) {
             // Скрываем кнопку "вперёд", если год больше текущего + 1
                 hideElement(calendarNext);
                 showElement(calendarBack);
@@ -195,4 +196,4 @@ function lockCalendar() {
         calendarBox.addEventListener('click', hideCalendarArrow);
     }
 }
-dateDiv.addEventListener('mouseover', lockCalendar);
+dateDiv.addEventListener('mouseenter', lockCalendar);

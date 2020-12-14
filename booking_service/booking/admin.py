@@ -16,7 +16,7 @@ class DoctorAdmin(admin.ModelAdmin):
     ordering = ('specialty', 'user__last_name')
 
     fields = ('specialty', 'user', 'full_name')
-    readonly_fields = ('user', 'full_name')
+    readonly_fields = ('full_name',)
 
     inlines = [
         AppointmentInline
