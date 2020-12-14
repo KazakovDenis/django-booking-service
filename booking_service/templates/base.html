@@ -16,10 +16,29 @@
     <link href="{% static 'admin/css/base.css' %}" type="text/css" media="all" rel="stylesheet" />
     <link href="{% static 'admin/css/widgets.css' %}" type="text/css" media="all" rel="stylesheet" />
     {% block head %}{% endblock %}
+    <style type="text/css">
+        head, body {
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
-<div class="container h-100">
-    <div class="row h-100 align-items-center">{% block content %}{% endblock %}</div>
+<div class="container-fluid h-100 px-0">
+    <header class="d-flex justify-content-between fixed-top bg-light">
+        <div class="d-flex py-4">
+            <a href="/" class="mx-5">Поликлиника Django</a>
+        </div>
+        <div class="d-flex py-4">
+            <a href="{% url 'admin:login' %}" class="mx-5">Войти</a>
+        </div>
+    </header>
+    <main class="d-flex h-100 align-items-center justify-content-center">
+        <div class="d-flex flex-column align-self-center align-items-center">
+            <div class="d-flex py-4 mt-10">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </main>
 </div>
 <script type="text/javascript" src="/jsi18n/"></script>
 <script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
