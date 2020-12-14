@@ -9,9 +9,13 @@ from .validators import date_validator, name_validator
 
 class Specialties(models.TextChoices):
     """Специальности врачей"""
-    DENTIST = 'dentist', _('стоматолог')
     SURGEON = 'surgeon', _('хирург')
+    DENTIST = 'dentist', _('стоматолог')
     THERAPIST = 'therapist', _('терапевт')
+    NEUROLOGIST = 'neurologist',  _('невролог')
+    OPHTHALMOLOGIST = 'ophthalmologist',  _('офтальмолог')
+    PSYCHOTHERAPIST = 'psychotherapist',  _('психотерапевт')
+    OTOLARYNGOLOGIST = 'otolaryngologist',  _('отоларинголог')
 
 
 class Doctor(models.Model):
