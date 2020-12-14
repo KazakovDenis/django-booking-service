@@ -6,7 +6,7 @@
 [Техническое задание](https://github.com/KazakovDenis/booking-service/blob/main/task.txt)  
 
 ## Использованный технологический стек
-* Python, Javacript
+* Python, Javascript
 * Django 3.1.4
 * Docker
 

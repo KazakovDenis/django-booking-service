@@ -17,12 +17,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, re_path, include
+from django.views.i18n import JavaScriptCatalog
 from django.views.static import serve
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', include('booking.urls')),
+    path('admin/', admin.site.urls),
+    # необходимо для отображения календаря вне админки неавторизованному пользователю
+    path('jsi18n/', JavaScriptCatalog.as_view(), name='jsi18n'),
 ]
 
 if settings.DEBUG:

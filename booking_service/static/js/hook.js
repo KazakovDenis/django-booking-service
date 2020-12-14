@@ -122,7 +122,7 @@ function validateDate(formDate) {
 
     // Проверяем, что дата - не выходной день
     let weekday = date.getDay();
-    if (weekday > 5) {
+    if (weekday == 0 || weekday == 6) {
         alert('К сожалению, приём не ведётся по выходным дням');
         return false;
     };
